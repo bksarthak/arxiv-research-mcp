@@ -1,0 +1,88 @@
+# Topic: Computational biology + ML applications
+#
+# Target audience: researchers working at the intersection of machine
+# learning and biology — protein structure, drug discovery, single-cell
+# analysis, genomics. Queries q-bio categories plus cs.LG cross-lists.
+
+[topic]
+name = "comp-bio"
+description = "Computational biology + ML: protein folding, drug discovery, single-cell analysis, genomics."
+
+# q-bio covers four sub-categories directly relevant here, plus we pull
+# cs.LG to catch ML-first papers that cross-list into biology.
+categories = [
+    "q-bio.BM",   # Biomolecules
+    "q-bio.GN",   # Genomics
+    "q-bio.QM",   # Quantitative methods
+    "q-bio.MN",   # Molecular networks
+    "cs.LG",      # Learning (cross-listed ML-for-bio papers)
+]
+
+keywords = [
+    # Proteins
+    "protein", "protein structure", "protein folding", "protein design",
+    "alphafold", "esm", "protein language model",
+    "binding affinity", "interface", "interaction",
+    "de novo design", "inverse folding",
+
+    # Small molecules and drug discovery
+    "drug discovery", "molecule", "molecular property",
+    "admet", "virtual screening", "docking",
+    "generative chemistry", "molecule generation",
+    "smiles", "selfies", "molecular graph",
+    "drug target", "target interaction",
+
+    # Genomics and single-cell
+    "genomics", "variant", "mutation", "gwas",
+    "single-cell", "scrnaseq", "rnaseq", "atac-seq",
+    "cell type", "cell atlas", "trajectory inference",
+    "batch correction", "integration",
+
+    # ML architectures commonly applied
+    "graph neural network", "gnn", "message passing",
+    "equivariant", "se(3)", "rotation invariant",
+    "diffusion model", "score-based", "flow matching",
+    "transformer", "attention",
+
+    # Structure and sequence modeling
+    "sequence to function", "deep mutational scanning",
+    "structure prediction", "contact prediction",
+    "embedding", "representation learning",
+
+    # Validation
+    "in vitro", "in vivo", "experimental validation",
+    "wet lab", "crystal structure", "cryo-em",
+]
+
+rubric_focus = """
+I care about computational biology research that applies modern ML to
+real biological problems. Reward:
+- Clear biological motivation and hypothesis (not "we tried ML on
+  dataset X")
+- Proper baselines against existing tools (AlphaFold, RosettaFold,
+  ESM, classical methods) — not just "deep learning beats traditional"
+- Experimental or wet-lab validation where applicable, or at least
+  realistic evaluation on held-out structures/genes
+- Physical / biological soundness checks (equivariance, energy
+  functions, known binding sites)
+- Novel architectures that reflect biological structure (geometric
+  deep learning, equivariant networks, protein language models)
+
+Penalize:
+- Pure benchmark papers on synthetic data with no biological insight
+- Methods that only work in simulation without any experimental
+  follow-up
+- Papers that are primarily about the ML architecture with biology
+  used only as a motivation
+- Application papers that use an off-the-shelf model with minimal
+  adaptation
+- Surveys and review papers
+
+Particularly interested in: protein structure and function prediction,
+de novo protein design, drug-target affinity and molecular generation,
+single-cell representation learning, equivariant geometric networks,
+protein language models, and methods with experimental follow-up.
+
+Less interested in: papers where ML is a black-box classifier,
+applications that ignore biological priors, or benchmark-only work.
+"""

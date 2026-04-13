@@ -1,0 +1,99 @@
+# arxiv-research-mcp — example configuration
+#
+# Copy to ${XDG_CONFIG_HOME}/arxiv-research-mcp/config.toml on Linux, or
+# the platform-appropriate equivalent on macOS/Windows. See README.md for
+# the exact search order.
+#
+# Every field below is optional — unset fields fall back to documented
+# defaults.
+
+# ─────────────────────────────────────────────────────────────────────────
+# [topic] — what to surface
+# ─────────────────────────────────────────────────────────────────────────
+[topic]
+# Short slug used in logs and tool responses.
+name = "ai-security"
+
+# Human-readable description — shown to MCP clients in the active-config
+# resource so the operator / LLM knows what the server is tuned for.
+description = "AI × cybersecurity intersection: LLM jailbreaks, adversarial ML, agentic-AI attacks."
+
+# arXiv category codes to query. The server OR-joins these in the search.
+# See https://arxiv.org/category_taxonomy for the full taxonomy.
+#
+# Common picks:
+#   cs.CR    — cryptography and security
+#   cs.AI    — artificial intelligence
+#   cs.LG    — machine learning
+#   cs.CL    — computation and language (NLP)
+#   stat.ML  — ML in statistics
+#   cs.SE    — software engineering
+#   cs.DC    — distributed / parallel computing
+categories = ["cs.CR"]
+
+# Keyword prefilter vocabulary. A paper must mention AT LEAST ONE keyword
+# in its title or abstract (case-insensitive substring match) to pass the
+# prefilter and reach the LLM judge. Empty list disables prefiltering.
+#
+# Be broad here — the judge handles precision. Too narrow and you lose recall.
+keywords = [
+    # LLM / foundation-model security
+    "llm", "language model", "large language", "foundation model",
+    "prompt injection", "jailbreak", "indirect injection",
+    "adversarial prompt", "refusal bypass", "safety filter",
+
+    # Adversarial ML
+    "adversarial example", "adversarial attack", "evasion attack",
+    "model extraction", "model stealing", "membership inference",
+    "data poisoning", "backdoor attack", "trojan model",
+
+    # Alignment / red-teaming
+    "alignment", "rlhf", "red team", "red-teaming", "ai safety",
+
+    # Agentic / tool-using
+    "autonomous agent", "ai agent", "agentic",
+    "tool use", "agent security", "computer use",
+
+    # Watermarking / IP
+    "watermark", "fingerprint",
+
+    # Applied AI × security
+    "vulnerability detection", "secure code", "malware detection",
+]
+
+# Free-text rubric focus injected verbatim into the research judge prompt.
+# This tells the LLM what the operator cares about — be specific.
+rubric_focus = """
+This operator cares most about:
+- LLM and agentic-AI security: prompt injection, jailbreaks, tool-use
+  attacks, autonomous agent compromise, agent-to-agent injection.
+- Adversarial ML: model extraction, data poisoning, backdoors,
+  membership inference, watermarking.
+- Applied security with a novel or hands-on angle: new attack classes,
+  red-team tooling, ML-based defense methods.
+
+They care LESS about: pure cryptographic theory, formal verification,
+surveys/position papers without new results, and general ML papers with
+no security angle.
+"""
+
+# ─────────────────────────────────────────────────────────────────────────
+# [server] — runtime paths
+# ─────────────────────────────────────────────────────────────────────────
+[server]
+# Where to store the dedup cursor. Defaults to the platform data dir
+# (XDG_DATA_HOME/arxiv-research-mcp/ on Linux). Uncomment to override.
+# data_dir = "/absolute/path/to/state/dir"
+
+# ─────────────────────────────────────────────────────────────────────────
+# [limits] — hard caps enforced at the API boundary
+# ─────────────────────────────────────────────────────────────────────────
+# These exist to prevent pathological inputs. You should rarely need to
+# touch them; the defaults are already generous.
+[limits]
+max_window_days = 365
+max_results_per_page = 500
+max_pages_per_fetch = 10
+max_keywords = 500
+max_categories = 20
+max_arxiv_ids_per_call = 1000

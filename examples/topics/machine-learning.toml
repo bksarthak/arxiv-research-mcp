@@ -1,0 +1,84 @@
+# Topic: General machine learning research (cs.LG + stat.ML)
+#
+# Target audience: ML researchers and practitioners who want a weekly
+# digest that surfaces methodologically novel work — not benchmark chasing,
+# not application papers, not survey re-hashes.
+#
+# Install by copying this file to the active config path. See README.md
+# for the platform-specific location.
+
+[topic]
+name = "ml-research"
+description = "General machine learning — novel methods, training dynamics, scaling behavior, and theory."
+
+# cs.LG is the primary ML category; stat.ML catches statistical learning
+# theory papers that cross-list there.
+categories = ["cs.LG", "stat.ML"]
+
+# Broad keyword set — the judge's quality axis handles precision.
+keywords = [
+    # Architectures and methods
+    "transformer", "attention", "self-attention", "mixture of experts",
+    "neural network", "deep learning", "mlp", "convolutional",
+    "state space model", "mamba", "ssm",
+
+    # Training dynamics and optimization
+    "optimizer", "adam", "adamw", "muon", "sophia",
+    "learning rate", "warmup", "cosine schedule",
+    "training dynamics", "loss landscape", "lottery ticket",
+    "gradient descent", "sgd", "convergence",
+
+    # Generalization and scaling
+    "generalization", "overparameterization", "grokking",
+    "double descent", "scaling law", "emergent", "phase transition",
+    "neural scaling", "chinchilla",
+
+    # Representation learning and self-supervision
+    "self-supervised", "contrastive", "representation learning",
+    "embedding", "feature learning",
+    "masked language model", "masked autoencoder",
+
+    # Transfer, meta, few-shot
+    "fine-tuning", "transfer learning", "few-shot", "in-context learning",
+    "meta learning", "lora", "adapter", "prefix tuning",
+
+    # Theory and analysis
+    "theoretical analysis", "bounds", "pac bayes", "information theoretic",
+    "implicit bias", "neural tangent", "ntk",
+
+    # Evaluation methodology
+    "benchmark", "evaluation", "ablation", "reproducibility",
+]
+
+rubric_focus = """
+I care about methodologically novel machine learning research. Reward:
+- Concrete new methods with clear novelty (not "we tried X on Y and it
+  worked better")
+- Honest empirical analysis: proper baselines, meaningful ablations,
+  error bars where appropriate
+- Theoretical insight paired with experimental validation
+- Papers that reveal something surprising about generalization, scaling,
+  training dynamics, or optimization landscape
+- Clear scope limits and honest discussion of what did NOT work
+
+Penalize:
+- Benchmark-chasing papers where the contribution is "SOTA on leaderboard"
+- Marketing superlatives without concrete evidence ("revolutionary",
+  "first-ever", "solves X")
+- Papers that are primarily re-implementations of known techniques
+- Survey / position papers without new empirical or theoretical content
+- Application papers where the ML contribution is incidental
+
+Particularly interested in: scaling behavior and phase transitions,
+optimizer insights, training dynamics, generalization theory,
+state-space models, MoE architectures, and in-context learning mechanisms.
+
+Less interested in: NLP-specific fine-tuning of established models,
+domain-specific applications without methodological novelty, or papers
+that are primarily ablations of an existing architecture.
+"""
+
+[limits]
+# Wider window than the default — ML papers can rotate quickly and a
+# weekly digest risks missing a spike.
+max_window_days = 365

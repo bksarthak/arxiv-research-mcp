@@ -1,0 +1,93 @@
+# Topic: Distributed systems, databases, operating systems, networking
+#
+# Target audience: systems researchers and engineers who care about
+# implementations, benchmarks, and tradeoffs — not pure theory.
+
+[topic]
+name = "distributed-systems"
+description = "Distributed systems, databases, OS kernels, network stacks, and performance research."
+
+categories = [
+    "cs.DC",   # Distributed, Parallel, and Cluster Computing
+    "cs.DB",   # Databases
+    "cs.OS",   # Operating Systems
+    "cs.NI",   # Networking and Internet Architecture
+    "cs.PF",   # Performance
+]
+
+keywords = [
+    # Consensus and coordination
+    "consensus", "paxos", "raft", "viewstamped replication",
+    "byzantine fault tolerance", "bft", "pbft", "hotstuff",
+    "atomic broadcast", "total order",
+    "leader election", "failure detector",
+
+    # Databases and storage
+    "database", "dbms", "oltp", "olap", "htap",
+    "transaction", "isolation level", "snapshot isolation",
+    "serializability", "mvcc", "two phase commit",
+    "b-tree", "lsm tree", "write-optimized",
+    "replication", "sharding", "partitioning",
+    "causal consistency", "eventual consistency", "linearizability",
+
+    # Operating systems and kernel
+    "kernel", "scheduler", "cpu scheduling",
+    "page table", "tlb", "virtual memory",
+    "unikernel", "microkernel", "isolation",
+    "syscall", "ebpf", "io_uring",
+    "namespace", "cgroup", "container runtime",
+
+    # Networking
+    "tcp", "quic", "rdma", "infiniband",
+    "congestion control", "bbr", "cubic",
+    "datacenter network", "incast", "flow control",
+    "programmable network", "p4", "smartnic",
+    "serverless cold start",
+
+    # Storage and memory
+    "nvme", "persistent memory", "pmem", "optane",
+    "ssd", "flash translation",
+    "memory-safe", "memory hierarchy",
+
+    # Performance
+    "latency", "tail latency", "throughput", "p99",
+    "benchmark", "workload", "trace",
+    "profiling", "observability", "telemetry",
+
+    # Fault tolerance and reliability
+    "fault tolerance", "failure recovery", "crash consistency",
+    "checkpoint", "replay",
+]
+
+rubric_focus = """
+I care about systems research that produces measurable, reproducible
+improvements over real baselines. Reward:
+- Concrete benchmarks against production baselines (not synthetic
+  strawmen)
+- Honest discussion of tradeoffs — what does the new system give up?
+- Implementation on realistic hardware (commodity servers, modern
+  NICs, actual SSDs) rather than pure simulation
+- Tail-latency analysis, not just averages
+- Novel insights into consensus, isolation, fault tolerance, or
+  performance at scale
+- Open-source implementations that reviewers can reproduce
+
+Penalize:
+- Theoretical complexity analyses without implementations
+- One-off optimizations with no generalization insight
+- Simulations of systems that never ran on real hardware
+- Benchmark papers that compare against unfairly weak baselines
+- Survey papers and "vision" papers
+- Papers that bury the critical tradeoff in the appendix
+
+Particularly interested in: consensus protocols and Byzantine fault
+tolerance at scale, database internals (transaction processing,
+new index structures, HTAP), kernel-level innovations (eBPF, io_uring,
+unikernels), network stack research (RDMA, QUIC, datacenter congestion
+control), new storage devices, and tail-latency analyses.
+
+Less interested in: pure theory papers, machine-learning-for-systems
+that treats the system as a black box, serverless cost studies
+without latency measurements, or papers about cryptocurrency systems
+unless the consensus contribution is genuinely novel.
+"""

@@ -1,0 +1,47 @@
+# ─── Python bytecode / caches ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ─── Build / distribution artifacts ─────────────────────────────────────
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+wheels/
+
+# ─── Virtualenvs ────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ─── Test / coverage output ─────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# ─── Type checker caches ────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# ─── Editor / IDE ───────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# ─── Runtime state (created at runtime, never committed) ────────────────
+# The dedup cursor lives in the user's XDG_DATA_HOME; anything the user
+# accidentally drops in the repo root should NOT be committed.
+cursor.json
+*.cursor.json
+.data/

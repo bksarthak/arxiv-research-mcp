@@ -1,0 +1,203 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+# ─────────────────────────────────────────────────────────────────────────
+# Project metadata
+# ─────────────────────────────────────────────────────────────────────────
+[project]
+name = "arxiv-research-mcp"
+version = "0.1.0"
+description = "MCP server exposing arXiv paper fetching, filtering, and a skeptical-reviewer judge prompt for building weekly research digests."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+# tomllib requires 3.11; we target 3.11+ for stdlib TOML parsing without
+# pulling in a backport dependency.
+requires-python = ">=3.11"
+authors = [
+    { name = "Sarthak" },
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "arxiv",
+    "research",
+    "llm",
+    "claude",
+    "anthropic",
+    "ai-security",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+# Runtime dependencies — intentionally minimal. The server uses stdlib
+# urllib for HTTP so we don't pull in `requests`/`httpx`, and defusedxml
+# is the one concession for safe XML parsing.
+dependencies = [
+    "mcp>=1.0.0",
+    "defusedxml>=0.7.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "mypy>=1.11",
+    "ruff>=0.6",
+    "pre-commit>=3.7",
+]
+
+[project.scripts]
+# `pipx run arxiv-research-mcp` and `uvx arxiv-research-mcp` both invoke
+# this entry point, which in turn calls FastMCP.run() on stdio transport.
+arxiv-research-mcp = "arxiv_research_mcp.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/bksarthak/arxiv-research-mcp"
+Repository = "https://github.com/bksarthak/arxiv-research-mcp"
+Issues = "https://github.com/bksarthak/arxiv-research-mcp/issues"
+Changelog = "https://github.com/bksarthak/arxiv-research-mcp/blob/main/CHANGELOG.md"
+
+# ─────────────────────────────────────────────────────────────────────────
+# Hatchling packaging
+# ─────────────────────────────────────────────────────────────────────────
+[tool.hatch.build.targets.wheel]
+packages = ["src/arxiv_research_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/arxiv_research_mcp",
+    "tests",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "pyproject.toml",
+]
+
+# ─────────────────────────────────────────────────────────────────────────
+# Ruff — lint + format (replaces flake8, black, isort, pyupgrade, bandit)
+# ─────────────────────────────────────────────────────────────────────────
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# `×` (U+00D7 MULTIPLICATION SIGN) is used intentionally in prose and
+# docstrings ("AI × security"). Allow it to suppress RUF001 / RUF002.
+allowed-confusables = ["×"]
+
+# Keep this list deliberate. `S` enables bandit-style security lints —
+# non-negotiable for a package other people will install.
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "N",    # pep8-naming
+    "UP",   # pyupgrade (modernize syntax)
+    "B",    # flake8-bugbear (common footguns)
+    "A",    # flake8-builtins (shadowing)
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "S",    # flake8-bandit (security)
+    "RUF",  # ruff-specific rules
+    "PL",   # pylint subset (design smells)
+    "D",    # pydocstyle (enforce docstrings on public API)
+]
+ignore = [
+    "D203",    # incompatible with D211 — pick one
+    "D213",    # incompatible with D212 — pick one
+    "PLR0913", # too many arguments — acceptable in API surface
+    "PLR2004", # magic values — acceptable in tests and constants
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use assert and don't need public-API docstrings or pydocstyle
+# prose formatting (D205 is about 1-blank-line-after-summary).
+"tests/**/*.py" = [
+    "S101",
+    "D100", "D101", "D102", "D103", "D104", "D205",
+    "PLR2004",
+]
+# __init__.py exports are allowed to be bare.
+"src/arxiv_research_mcp/__init__.py" = ["D104"]
+# Entry point file doesn't need a module-level docstring preamble on main().
+"src/arxiv_research_mcp/__main__.py" = ["D100"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+# ─────────────────────────────────────────────────────────────────────────
+# Mypy — strict type checking
+# ─────────────────────────────────────────────────────────────────────────
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+implicit_reexport = false
+strict_equality = true
+extra_checks = true
+
+# Third-party packages without type stubs.
+[[tool.mypy.overrides]]
+module = ["defusedxml.*"]
+ignore_missing_imports = true
+
+# Provider SDKs are optional dependencies used only by the examples/
+# scripts (``with_claude.py``, ``with_openai.py``, ``with_gemini.py``).
+# None are in the runtime dep set, so mypy can't find them on a fresh
+# install — we silence the import error here so ``mypy src tests examples``
+# stays clean without forcing the SDKs into every contributor's venv.
+[[tool.mypy.overrides]]
+module = ["anthropic", "openai", "google"]
+ignore_missing_imports = true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Pytest
+# ─────────────────────────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+asyncio_mode = "auto"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+filterwarnings = [
+    "error",
+]

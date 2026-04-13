@@ -1,0 +1,82 @@
+# Topic: Cryptography research (cs.CR, crypto-focused)
+#
+# This is the "opposite" of ai-security.toml: both live in cs.CR, but
+# they target completely different halves of the field. Use this config
+# when you want to track cryptographic primitives, protocols, proofs,
+# and analysis — not LLM jailbreaks.
+
+[topic]
+name = "cryptography"
+description = "Cryptographic primitives, protocols, security proofs, and efficiency analysis."
+
+categories = ["cs.CR"]
+
+keywords = [
+    # Foundations
+    "encryption", "decryption", "cipher", "block cipher", "stream cipher",
+    "mode of operation", "authenticated encryption", "aead",
+    "hash function", "collision resistance", "preimage",
+    "random oracle",
+
+    # Signatures and authentication
+    "signature scheme", "digital signature", "eddsa", "ecdsa",
+    "bls signature", "threshold signature", "blind signature",
+    "message authentication", "mac", "hmac",
+
+    # Zero-knowledge and proof systems
+    "zero-knowledge", "zero knowledge", "zk-snark", "snark", "stark",
+    "plonk", "groth16", "bulletproofs", "nova",
+    "verifiable computation", "succinct argument", "proof system",
+    "interactive proof", "iop",
+
+    # Post-quantum
+    "post-quantum", "lattice", "ring-lwe", "module-lwe",
+    "learning with errors", "lwe", "ntru",
+    "code-based", "isogeny", "supersingular",
+    "dilithium", "kyber", "falcon", "sphincs",
+
+    # Advanced protocols
+    "multiparty computation", "mpc", "secure multiparty",
+    "garbled circuit", "oblivious transfer", "secret sharing",
+    "private information retrieval", "pir",
+    "private set intersection", "psi",
+
+    # Homomorphic encryption
+    "homomorphic encryption", "fhe", "bfv", "bgv", "ckks", "tfhe",
+    "somewhat homomorphic",
+
+    # Accumulators and commitments
+    "merkle tree", "vector commitment", "polynomial commitment",
+    "kzg", "accumulator",
+
+    # Pairings and curves
+    "elliptic curve", "pairing", "bilinear map", "bls12", "bn254",
+]
+
+rubric_focus = """
+I care about cryptographic constructions, security analyses, and
+efficiency improvements. Reward:
+- New primitives or protocols with clear security definitions and
+  explicit assumptions
+- Security proofs (computational or information-theoretic) against
+  well-defined adversaries
+- Efficiency improvements over prior work with concrete benchmarks
+- Cryptanalysis that actually breaks or meaningfully weakens a scheme
+- Post-quantum constructions with conservative parameter choices
+
+Penalize:
+- Hand-waving "novel protocol" claims without proofs
+- Applied-crypto tutorials and explainers
+- Papers that propose new schemes without comparison to prior work
+- "Blockchain-based" constructions where the crypto is incidental
+- Survey papers
+
+Particularly interested in: post-quantum primitives (lattice, code-based,
+isogeny), zero-knowledge proof systems (SNARKs, STARKs, folding schemes),
+multi-party computation, homomorphic encryption, and threshold
+cryptography.
+
+Less interested in: generic "machine learning for cryptography" papers,
+AI-security topics (prompt injection, adversarial ML), applied-crypto
+case studies, or anything that's really a blockchain paper in disguise.
+"""
