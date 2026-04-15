@@ -303,12 +303,16 @@ class TestFetchCandidatePapersCache:
         test_verdict_cache: VerdictCache,
     ) -> None:
         # Pre-populate the cache with a verdict for paper 1
-        test_verdict_cache.store([{
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 9,
-            "summary": "Cached paper",
-        }])
+        test_verdict_cache.store(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 9,
+                    "summary": "Cached paper",
+                }
+            ]
+        )
         with patch.object(
             server,
             "collect_candidate_papers",
@@ -330,11 +334,15 @@ class TestFetchCandidatePapersCache:
         self,
         test_verdict_cache: VerdictCache,
     ) -> None:
-        test_verdict_cache.store([{
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 9,
-        }])
+        test_verdict_cache.store(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 9,
+                }
+            ]
+        )
         with patch.object(
             server,
             "collect_candidate_papers",
@@ -355,12 +363,23 @@ class TestFetchCandidatePapersCache:
 # ─────────────────────────────────────────────────────────────────────────
 class TestSubmitVerdicts:
     def test_stores_verdicts(self, test_verdict_cache: VerdictCache) -> None:
-        verdicts_json = json.dumps([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7,
-             "summary": "Paper A", "reasoning": "Good eval"},
-            {"arxiv_id": "2604.00002", "relevance_score": 4, "quality_score": 3,
-             "summary": "Paper B"},
-        ])
+        verdicts_json = json.dumps(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 7,
+                    "summary": "Paper A",
+                    "reasoning": "Good eval",
+                },
+                {
+                    "arxiv_id": "2604.00002",
+                    "relevance_score": 4,
+                    "quality_score": 3,
+                    "summary": "Paper B",
+                },
+            ]
+        )
         result = _call("submit_verdicts", verdicts_json=verdicts_json)
         assert result["ok"] is True
         assert sorted(result["stored"]) == ["2604.00001", "2604.00002"]
@@ -379,9 +398,11 @@ class TestSubmitVerdicts:
         assert "must be a JSON array" in result["error"]
 
     def test_invalid_verdict_returns_error(self) -> None:
-        verdicts_json = json.dumps([
-            {"arxiv_id": "garbage", "relevance_score": 5, "quality_score": 5},
-        ])
+        verdicts_json = json.dumps(
+            [
+                {"arxiv_id": "garbage", "relevance_score": 5, "quality_score": 5},
+            ]
+        )
         result = _call("submit_verdicts", verdicts_json=verdicts_json)
         assert result["ok"] is False
 
@@ -391,9 +412,11 @@ class TestSubmitVerdicts:
         tmp_path: Path,
         test_config: Config,
     ) -> None:
-        verdicts_json = json.dumps([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
-        ])
+        verdicts_json = json.dumps(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
+            ]
+        )
         _call("submit_verdicts", verdicts_json=verdicts_json)
         # Reload from disk
         rhash = compute_rubric_hash(test_config.topic.rubric_focus)
@@ -406,20 +429,24 @@ class TestSubmitVerdicts:
 # ─────────────────────────────────────────────────────────────────────────
 class TestGetCachedVerdicts:
     def test_returns_entries(self, test_verdict_cache: VerdictCache) -> None:
-        test_verdict_cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
-            {"arxiv_id": "2604.00002", "relevance_score": 4, "quality_score": 3},
-        ])
+        test_verdict_cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
+                {"arxiv_id": "2604.00002", "relevance_score": 4, "quality_score": 3},
+            ]
+        )
         result = _call("get_cached_verdicts")
         assert result["ok"] is True
         assert result["total"] == 2
         assert "2604.00001" in result["entries"]
 
     def test_respects_limit(self, test_verdict_cache: VerdictCache) -> None:
-        test_verdict_cache.store([
-            {"arxiv_id": f"2604.{i:05d}", "relevance_score": 5, "quality_score": 5}
-            for i in range(10)
-        ])
+        test_verdict_cache.store(
+            [
+                {"arxiv_id": f"2604.{i:05d}", "relevance_score": 5, "quality_score": 5}
+                for i in range(10)
+            ]
+        )
         result = _call("get_cached_verdicts", limit=3)
         assert result["total"] == 10
         assert result["returned"] == 3
@@ -431,19 +458,23 @@ class TestGetCachedVerdicts:
 
 class TestClearVerdictCache:
     def test_requires_confirm(self, test_verdict_cache: VerdictCache) -> None:
-        test_verdict_cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
-        ])
+        test_verdict_cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
+            ]
+        )
         result = _call("clear_verdict_cache")
         assert result["ok"] is False
         assert "confirm" in result["error"].lower()
         assert test_verdict_cache.contains("2604.00001")
 
     def test_confirm_wipes(self, test_verdict_cache: VerdictCache) -> None:
-        test_verdict_cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
-            {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 5},
-        ])
+        test_verdict_cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
+                {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 5},
+            ]
+        )
         result = _call("clear_verdict_cache", confirm=True)
         assert result["ok"] is True
         assert result["removed"] == 2
@@ -455,9 +486,11 @@ class TestClearVerdictCache:
 # ─────────────────────────────────────────────────────────────────────────
 class TestVerdictCacheStateResource:
     def test_returns_json(self, test_verdict_cache: VerdictCache) -> None:
-        test_verdict_cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
-        ])
+        test_verdict_cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
+            ]
+        )
         result = _call("verdict_cache_state_resource")
         data = json.loads(result)
         assert data["total"] == 1

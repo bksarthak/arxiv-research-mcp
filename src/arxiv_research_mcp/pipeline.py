@@ -407,9 +407,7 @@ class VerdictCache:
         verdicts = raw.get("verdicts", {})
         if isinstance(verdicts, dict):
             self._data = {
-                str(k): cast("VerdictEntry", v)
-                for k, v in verdicts.items()
-                if isinstance(v, dict)
+                str(k): cast("VerdictEntry", v) for k, v in verdicts.items() if isinstance(v, dict)
             }
         else:
             self._data = {}

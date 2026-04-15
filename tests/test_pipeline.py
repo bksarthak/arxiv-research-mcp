@@ -296,14 +296,18 @@ class TestVerdictCache:
         path = tmp_path / "verdicts.json"
         rhash = compute_rubric_hash("test")
         cache = VerdictCache(path, rhash)
-        cache.store([{
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 9,
-            "summary": "Good paper",
-            "project_angle": "Build it",
-            "reasoning": "Strong eval",
-        }])
+        cache.store(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 9,
+                    "summary": "Good paper",
+                    "project_angle": "Build it",
+                    "reasoning": "Strong eval",
+                }
+            ]
+        )
         cache.save()
 
         fresh = VerdictCache(path, rhash)
@@ -326,11 +330,15 @@ class TestVerdictCache:
     def test_rubric_change_invalidates(self, tmp_path: Path) -> None:
         path = tmp_path / "verdicts.json"
         cache = VerdictCache(path, "hash_v1")
-        cache.store([{
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 9,
-        }])
+        cache.store(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 9,
+                }
+            ]
+        )
         cache.save()
 
         # Reload with different hash → empty
@@ -364,11 +372,15 @@ class TestVerdictCache:
         path = tmp_path / "verdicts.json"
         rhash = "h"
         cache = VerdictCache(path, rhash)
-        cache.store([{
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 7,
-        }])
+        cache.store(
+            [
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 8,
+                    "quality_score": 7,
+                }
+            ]
+        )
 
         papers = [
             _make_paper("2604.00001"),
@@ -382,18 +394,22 @@ class TestVerdictCache:
 
     def test_store_returns_ids(self, tmp_path: Path) -> None:
         cache = VerdictCache(tmp_path / "v.json", "h")
-        stored = cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
-            {"arxiv_id": "2604.00002", "relevance_score": 4, "quality_score": 3},
-        ])
+        stored = cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
+                {"arxiv_id": "2604.00002", "relevance_score": 4, "quality_score": 3},
+            ]
+        )
         assert sorted(stored) == ["2604.00001", "2604.00002"]
 
     def test_store_skips_empty_ids(self, tmp_path: Path) -> None:
         cache = VerdictCache(tmp_path / "v.json", "h")
-        stored = cache.store([
-            {"arxiv_id": "", "relevance_score": 5, "quality_score": 5},
-            {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
-        ])
+        stored = cache.store(
+            [
+                {"arxiv_id": "", "relevance_score": 5, "quality_score": 5},
+                {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
+            ]
+        )
         assert stored == ["2604.00001"]
 
     def test_store_overwrites_existing(self, tmp_path: Path) -> None:
@@ -406,10 +422,12 @@ class TestVerdictCache:
 
     def test_clear(self, tmp_path: Path) -> None:
         cache = VerdictCache(tmp_path / "v.json", "h")
-        cache.store([
-            {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
-            {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 5},
-        ])
+        cache.store(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5},
+                {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 5},
+            ]
+        )
         assert cache.clear() == 2
         assert len(cache) == 0
 
@@ -418,8 +436,13 @@ class TestVerdictCache:
         cache.store([{"arxiv_id": "2604.00001", "relevance_score": 5, "quality_score": 5}])
         snap = cache.snapshot()
         snap["injected"] = VerdictEntry(
-            judged_at="", arxiv_id="injected", relevance_score=0,
-            quality_score=0, summary="", project_angle="", reasoning="",
+            judged_at="",
+            arxiv_id="injected",
+            relevance_score=0,
+            quality_score=0,
+            summary="",
+            project_angle="",
+            reasoning="",
         )
         assert not cache.contains("injected")
 

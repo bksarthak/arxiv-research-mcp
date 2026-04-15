@@ -360,14 +360,10 @@ def validate_rubric_focus(
 # Verdict validators
 # ─────────────────────────────────────────────────────────────────────────
 #: Required keys in every verdict dict submitted by the client.
-_VERDICT_REQUIRED_KEYS: frozenset[str] = frozenset(
-    {"arxiv_id", "relevance_score", "quality_score"}
-)
+_VERDICT_REQUIRED_KEYS: frozenset[str] = frozenset({"arxiv_id", "relevance_score", "quality_score"})
 
 #: Optional keys allowed in a verdict dict — anything else is stripped.
-_VERDICT_OPTIONAL_KEYS: frozenset[str] = frozenset(
-    {"summary", "project_angle", "reasoning"}
-)
+_VERDICT_OPTIONAL_KEYS: frozenset[str] = frozenset({"summary", "project_angle", "reasoning"})
 
 
 def validate_verdict(value: object) -> dict[str, object]:

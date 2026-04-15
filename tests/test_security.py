@@ -264,25 +264,29 @@ class TestValidateRubricFocus:
 
 class TestValidateVerdict:
     def test_valid_verdict(self) -> None:
-        v = validate_verdict({
-            "arxiv_id": "2604.00001",
-            "relevance_score": 8,
-            "quality_score": 7,
-            "summary": "Good paper",
-            "project_angle": "Build it",
-            "reasoning": "Strong eval",
-        })
+        v = validate_verdict(
+            {
+                "arxiv_id": "2604.00001",
+                "relevance_score": 8,
+                "quality_score": 7,
+                "summary": "Good paper",
+                "project_angle": "Build it",
+                "reasoning": "Strong eval",
+            }
+        )
         assert v["arxiv_id"] == "2604.00001"
         assert v["relevance_score"] == 8
         assert v["quality_score"] == 7
         assert v["summary"] == "Good paper"
 
     def test_minimal_verdict(self) -> None:
-        v = validate_verdict({
-            "arxiv_id": "2604.00001",
-            "relevance_score": 5,
-            "quality_score": 3,
-        })
+        v = validate_verdict(
+            {
+                "arxiv_id": "2604.00001",
+                "relevance_score": 5,
+                "quality_score": 3,
+            }
+        )
         assert v["arxiv_id"] == "2604.00001"
         assert "summary" not in v
 
@@ -292,27 +296,33 @@ class TestValidateVerdict:
 
     def test_invalid_arxiv_id_rejected(self) -> None:
         with pytest.raises(ValidationError, match="does not match"):
-            validate_verdict({
-                "arxiv_id": "garbage",
-                "relevance_score": 5,
-                "quality_score": 5,
-            })
+            validate_verdict(
+                {
+                    "arxiv_id": "garbage",
+                    "relevance_score": 5,
+                    "quality_score": 5,
+                }
+            )
 
     def test_score_out_of_range_rejected(self) -> None:
         with pytest.raises(ValidationError, match="must be 0-10"):
-            validate_verdict({
-                "arxiv_id": "2604.00001",
-                "relevance_score": 11,
-                "quality_score": 5,
-            })
+            validate_verdict(
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": 11,
+                    "quality_score": 5,
+                }
+            )
 
     def test_score_negative_rejected(self) -> None:
         with pytest.raises(ValidationError, match="must be 0-10"):
-            validate_verdict({
-                "arxiv_id": "2604.00001",
-                "relevance_score": -1,
-                "quality_score": 5,
-            })
+            validate_verdict(
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": -1,
+                    "quality_score": 5,
+                }
+            )
 
     def test_non_dict_rejected(self) -> None:
         with pytest.raises(ValidationError, match="must be a dict"):
@@ -320,28 +330,34 @@ class TestValidateVerdict:
 
     def test_bool_score_rejected(self) -> None:
         with pytest.raises(ValidationError, match="must be an int"):
-            validate_verdict({
-                "arxiv_id": "2604.00001",
-                "relevance_score": True,
-                "quality_score": 5,
-            })
+            validate_verdict(
+                {
+                    "arxiv_id": "2604.00001",
+                    "relevance_score": True,
+                    "quality_score": 5,
+                }
+            )
 
     def test_optional_fields_truncated(self) -> None:
-        v = validate_verdict({
-            "arxiv_id": "2604.00001",
-            "relevance_score": 5,
-            "quality_score": 5,
-            "summary": "x" * 5000,
-        })
+        v = validate_verdict(
+            {
+                "arxiv_id": "2604.00001",
+                "relevance_score": 5,
+                "quality_score": 5,
+                "summary": "x" * 5000,
+            }
+        )
         assert len(str(v.get("summary", ""))) <= 1000
 
 
 class TestValidateVerdictList:
     def test_valid_list(self) -> None:
-        verdicts = validate_verdict_list([
-            {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
-            {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 3},
-        ])
+        verdicts = validate_verdict_list(
+            [
+                {"arxiv_id": "2604.00001", "relevance_score": 8, "quality_score": 7},
+                {"arxiv_id": "2604.00002", "relevance_score": 5, "quality_score": 3},
+            ]
+        )
         assert len(verdicts) == 2
 
     def test_exceeds_limit_rejected(self) -> None:

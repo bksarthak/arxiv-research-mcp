@@ -436,7 +436,9 @@ def get_cached_verdicts(limit: int = 100) -> dict[str, Any]:
         _, _ = _ensure_initialized()
         vcache = _ensure_verdict_cache()
         validated_limit = validate_positive_bounded_int(
-            limit, name="limit", maximum=10_000,
+            limit,
+            name="limit",
+            maximum=10_000,
         )
         snapshot = vcache.snapshot()
         total = len(snapshot)
